@@ -103,6 +103,8 @@ pkg_root(pkg::PkgAtPath) = ensure_dirpath(expanduser(pkg.package_path))
 
 const PKG_LOCAL_DIR_KEY = "JULIA_LOCAL_PACKAGES"
 
+const ENV_PKG_LOCAL_DIR_KEY = "ENV[\"" * PKG_LOCAL_DIR_KEY * "\"]"
+
 """
     PkgLocal(directory)
 
@@ -114,20 +116,29 @@ end
 
 function pkg_local_dir(expand = true)
     haskey(ENV, PKG_LOCAL_DIR_KEY) ||
-        error("Specify local package directory with ENV[$(PKG_LOCAL_DIR_KEY)]")
-    dir = get(ENV, PKG_LOCAL_DIR_KEY)
+        error("Specify local package directory with $(ENV_PKG_LOCAL_DIR_KEY)")
+    dir = ENV[PKG_LOCAL_DIR_KEY]
     expand ? expanduser(dir) : dir
 end
 
-show(io::IO, pkg::PkgLocal) =
-    print(io, "package $(pkg.package_name) in $(pkg_local_dir(false))")
+function show(io::IO, pkg::PkgLocal)
+    print(io, "package $(pkg.package_name) in ")
+    if haskey(ENV, PKG_LOCAL_DIR_KEY)
+        print(io, pkg_local_dir(false))
+    else
+        print(io, ENV_PKG_LOCAL_DIR_KEY * " ")
+        print_with_color(:red, io, "(not set)")
+    end
+end
 
 macro pkg_local_str(package_name)
     PkgLocal(package_name)
 end
 
 pkg_root(pkg::PkgLocal) =
-    ensure_dirpath(normpath(pkg_local_dir(), pkg_root(pkg)))
+    ensure_dirpath(normpath(pkg_local_dir(), pkg_name(pkg)))
+
+pkg_name(pkg::PkgLocal) = pkg.package_name
 
 ######################################################################
 # provide methods for types above
