@@ -92,7 +92,7 @@ end
 Package at the given path. `~` is resolved.
 """
 macro pkg_at_str(package_path)
-    PackageAtPath(package_path)
+    PkgAtPath(package_path)
 end
 
 pkg_root(pkg::PkgAtPath) = ensure_dirpath(expanduser(pkg.package_path))

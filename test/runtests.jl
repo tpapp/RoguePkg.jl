@@ -18,12 +18,20 @@ mktempdir() do dir
         rm(test_path; force = true) # may not exist if test doesn't work, that should not error
     end
     # find by path
-    all_tests(RoguePkg.PkgAtPath(pkg_dir))
+    pkg = RoguePkg.PkgAtPath(@eval @pkg_at_str($pkg_dir))
+    all_tests(pkg)
+    @test repr(pkg) == "package at path $pkg_dir"
     # find by module
     push!(LOAD_PATH, dir)
-    all_tests(pkg_for"Foo")
+    pkg = pkg_for"Foo"
+    @test repr(pkg) == "package for module Foo (located dynamically)"
+    all_tests(pkg)
     # find by path in environment
+    @test repr(pkg_local"Foo") ==
+        "package Foo in ENV[\"JULIA_LOCAL_PACKAGES\"] \e[31m(not set)\e[39m"
     withenv("JULIA_LOCAL_PACKAGES" => dir) do
-        all_tests(pkg_local"Foo")
+        pkg = pkg_local"Foo"
+        @test repr(pkg) == "package Foo in $(dir)"
+        all_tests(pkg)
     end
 end
