@@ -18,16 +18,18 @@ If `path` is not a directory, append a `/`.
 ensure_dirpath(path) = isdirpath(path) ? path : path * "/"
 
 """
-    package_root(package_spec)
+    pkg_root(package_spec)
 
-Return the root directory for a package specification.
+Return the root directory for a package specification.  See the documentation
+for ways to specify a package.
 """
 function pkg_root end
 
 """
-    package_name(package_spec)
+    pkg_name(package_spec)
 
-Return the name of the package as a string.
+Return the name of the package as a string. See the documentation for ways to
+specify a package.
 """
 pkg_name(pkg::PackageSpec) = splitdir(splitdir(pkg_root(pkg))[1])[2]
 
@@ -49,7 +51,7 @@ struct PkgForModule{S <: AbstractString} <: PackageSpec
 end
 
 show(io::IO, pkg::PkgForModule) =
-    print(io, "package for module $(pkg.module_name) (located dynamically)")
+    print(io, "package for module \"$(pkg.module_name)\" (located dynamically)")
 
 """
     pkg_for"Module"
@@ -62,6 +64,8 @@ end
 
 function pkg_root(pkg::PkgForModule)
     module_path = Base.find_in_path(pkg.module_name, nothing)
+    module_path == nothing &&
+        error("module \"$(pkg.module_name)\" could not be found in the load path")
     src_dir = splitdir(module_path)[1]
     normpath(src_dir, "..")
 end
@@ -122,7 +126,7 @@ function pkg_local_dir(expand = true)
 end
 
 function show(io::IO, pkg::PkgLocal)
-    print(io, "package $(pkg.package_name) in ")
+    print(io, "package \"$(pkg.package_name)\" in ")
     if haskey(ENV, PKG_LOCAL_DIR_KEY)
         print(io, pkg_local_dir(false))
     else

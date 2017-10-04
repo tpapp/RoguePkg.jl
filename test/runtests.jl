@@ -24,14 +24,15 @@ mktempdir() do dir
     # find by module
     push!(LOAD_PATH, dir)
     pkg = pkg_for"Foo"
-    @test repr(pkg) == "package for module Foo (located dynamically)"
+    @test repr(pkg) == "package for module \"Foo\" (located dynamically)"
     all_tests(pkg)
     # find by path in environment
     @test repr(pkg_local"Foo") ==
-        "package Foo in ENV[\"JULIA_LOCAL_PACKAGES\"] \e[31m(not set)\e[39m"
+        "package \"Foo\" in ENV[\"JULIA_LOCAL_PACKAGES\"] \e[31m(not set)\e[39m"
     withenv("JULIA_LOCAL_PACKAGES" => dir) do
         pkg = pkg_local"Foo"
-        @test repr(pkg) == "package Foo in $(dir)"
+        @test repr(pkg) == "package \"Foo\" in $(dir)"
         all_tests(pkg)
     end
+    @test_throws ErrorException Pkg.dir(pkg_for"this_better_not_exist")
 end
