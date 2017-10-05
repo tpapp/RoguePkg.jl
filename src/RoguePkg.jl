@@ -161,7 +161,8 @@ function Pkg.test(pkg::PackageSpec; coverage = false)
     errs = AbstractString[]
     nopkgs = AbstractString[]
     notests = AbstractString[]
-    Pkg.Entry.test!(pkg_root(pkg), errs, nopkgs, notests; coverage = coverage)
+    Base.cd(() -> Pkg.Entry.test!(pkg_root(pkg), errs, nopkgs, notests; coverage = coverage),
+            Pkg.Dir.path())
     # FIXME check errs, nopks, notests
     nothing
 end

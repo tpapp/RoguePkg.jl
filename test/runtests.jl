@@ -8,6 +8,9 @@ mktempdir() do dir
     mkpath(src_dir)
     mkpath(test_dir)
     write(joinpath(src_dir, "Foo.jl"), "module Foo\nend")
+    # this will test Pkg.Entry.resolve
+    write(joinpath(test_dir, "REQUIRE"), "Parameters")
+    # running tests will create an empty file, which we can check
     test_path = tempname()
     write(joinpath(test_dir, "runtests.jl"), "touch(\"$(test_path)\")")
     function all_tests(pkg)
