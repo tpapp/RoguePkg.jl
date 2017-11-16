@@ -167,4 +167,7 @@ function Pkg.test(pkg::PackageSpec; coverage = false)
     nothing
 end
 
+Pkg.build(pkgs::PackageSpec...) =
+    Pkg.cd(Pkg.Entry.build, [Pkg.dir.(pkgs)...])
+
 end # module
