@@ -43,8 +43,7 @@ pkg_name(s::AbstractString) = s
 """
     PkgForModule(module_name)
 
-Package for the module `module_name`, located dynamically using
-`Base.find_in_path`.
+Package for the module `module_name`, located dynamically using.
 """
 struct PkgForModule{S <: AbstractString} <: PackageSpec
     module_name::S
@@ -56,14 +55,20 @@ show(io::IO, pkg::PkgForModule) =
 """
     pkg_for"Module"
 
-Package for `"Module"`, located dynamically using `Base.find_in_path`.
+Package for `"Module"`, located dynamically.
 """
 macro pkg_for_str(module_name)
     PkgForModule(module_name)
 end
 
+if VERSION ≥ v"0.7-"
+    _find_package(name) = Base.find_package(name)
+else
+    _find_package(name) = Base.find_in_path(name, nothing)
+end
+
 function pkg_root(pkg::PkgForModule)
-    module_path = Base.find_in_path(pkg.module_name, nothing)
+    module_path = _find_package(pkg.module_name)
     module_path == nothing &&
         error("module \"$(pkg.module_name)\" could not be found in the load path")
     src_dir = splitdir(module_path)[1]

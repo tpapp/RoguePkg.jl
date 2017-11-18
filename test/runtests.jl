@@ -1,5 +1,6 @@
 using RoguePkg
-using Base.Test
+using Compat
+using Compat.Test
 
 mktempdir() do dir
     pkg_dir = joinpath(dir, "Foo")
