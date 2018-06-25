@@ -1,13 +1,15 @@
 # RoguePkg
 
-[![Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](http://www.repostatus.org/badges/latest/wip.svg)](http://www.repostatus.org/#wip)
+![Lifecycle](https://img.shields.io/badge/lifecycle-retired-orange.svg?style=flat-square)
 [![Build Status](https://travis-ci.org/tpapp/RoguePkg.jl.svg?branch=master)](https://travis-ci.org/tpapp/RoguePkg.jl)
 [![Coverage Status](https://coveralls.io/repos/tpapp/RoguePkg.jl/badge.svg?branch=master&service=github)](https://coveralls.io/github/tpapp/RoguePkg.jl?branch=master)
 [![codecov.io](http://codecov.io/github/tpapp/RoguePkg.jl/coverage.svg?branch=master)](http://codecov.io/github/tpapp/RoguePkg.jl?branch=master)
 
-This package defines some methods for functions in `Base.Pkg` that should make testing, benchmarking, and locating files in packages outside the default directory (which is returned by `Pkg.dir()`, eg `~/.julia/v0.6`) easier.
+**This package was made obsolete by the new `Pkg` framework of Julia v0.7, which simplifies development for local packages.** It is retired, and unlikely to receive any updates.
 
-It a stopgap measure, and should be obsoleted by [Pkg3](https://github.com/StefanKarpinski/Pkg3.jl).
+## Description
+
+This package defines some methods for functions in `Base.Pkg` that should make testing, benchmarking, and locating files in packages outside the default directory (which is returned by `Pkg.dir()`, eg `~/.julia/v0.6`) easier.
 
 ## Usage
 
